@@ -1,4 +1,4 @@
-package com.middlecurved.middlecurvedbottomnavigationbar;
+package com.middlecurved;
 
 import android.content.Context;
 import android.graphics.Canvas;
