@@ -1,4 +1,4 @@
-package com.middlecurved;
+package com.middlecurved.custombottomnavigationbar;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -11,18 +11,14 @@ import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.view.menu.MenuView;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.middlecurved.middlecurvedbottomnavigationbar.R;
 
 import java.lang.reflect.Field;
 
@@ -31,7 +27,9 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
     private Path mPath;
     private Paint mPaint;
 
-    /** the CURVE_CIRCLE_RADIUS represent the radius of the fab button */
+    /**
+     * the CURVE_CIRCLE_RADIUS represent the radius of the fab button
+     */
     private int CURVE_CIRCLE_RADIUS;
     // the coordinates of the first curve
     private Point mFirstCurveStartPoint = new Point();
@@ -48,6 +46,7 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
 
     private int mNavigationBarWidth;
     private int mNavigationBarHeight;
+    Context context;
 
     public MiddleCurvedBottomNavigationBar(Context context) {
         super(context);
@@ -55,6 +54,7 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
         inflateMenu();
         removeShiftMode(this);
         init();
+        this.context = context;
     }
 
     public MiddleCurvedBottomNavigationBar(Context context, AttributeSet attrs) {
@@ -63,9 +63,10 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
         inflateMenu();
         removeShiftMode(this);
         init();
+        this.context = context;
     }
 
-    public void inflateMenu(){
+    private void inflateMenu() {
         this.inflateMenu(R.menu.navigation_bar_menu_items);
     }
 
@@ -74,36 +75,29 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
         setCubicCircleRadius(context);
         inflateMenu();
         removeShiftMode(this);
+
         init();
+        this.context = context;
     }
 
 
-    private void setMenuIcons(int first, int second, int third, int fourth){
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
-        for (int i = 0; i < menuView.getChildCount(); i++) {
-            BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
-            ImageView icon = (ImageView) item.findViewById(R.id.icon);
-            switch (i){
-                case 0:
-                    icon.setImageResource(first);
-                    break;
-                case 1:
-                    icon.setImageResource(second);
-                    break;
-                case 3:
-                    icon.setImageResource(third);
-                    break;
-                case 4:
-                    icon.setImageResource(fourth);
-                    break;
+    public void setBottomBarBgColor(int color){
+        this.setBackgroundColor(color);
+    }
 
-            }
-        }
+    public void setMenuIcons(int first, int second, int third, int fourth) {
+
+
+        getMenu().getItem(0).setIcon(first);
+        getMenu().getItem(1).setIcon(second);
+        getMenu().getItem(2).setIcon(second);
+        getMenu().getItem(3).setIcon(third);
+        getMenu().getItem(4).setIcon(fourth);
+
     }
 
 
-
-    public  void removeShiftMode(BottomNavigationView view) {
+    private void removeShiftMode(BottomNavigationView view) {
 
         /*get first bottom navigation menu view from bottom navigation  */
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
@@ -130,7 +124,7 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
                 smallText.setVisibility(View.INVISIBLE);
                 //TextView largeText = (TextView) menuItemView.findViewById(R.id.largeLabel);
                 ImageView icon = (ImageView) item.findViewById(R.id.icon);
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) icon.getLayoutParams();
+                LayoutParams params = (LayoutParams) icon.getLayoutParams();
                 params.gravity = Gravity.CENTER;
                 item.setShiftingMode(true);
             }
@@ -202,12 +196,6 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
         mPath.lineTo(0, mNavigationBarHeight);
         mPath.close();
     }
-
-    @Override
-    public void setItemIconTintList(@Nullable ColorStateList tint) {
-        super.setItemIconTintList(null);
-    }
-
 
 
     @Override

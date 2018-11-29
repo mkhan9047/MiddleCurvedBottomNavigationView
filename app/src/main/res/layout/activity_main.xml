@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +8,12 @@
     tools:context=".MainActivity">
 
 
+<com.middlecurved.custombottomnavigationbar.MiddleCurvedBottomNavigationBar
+    android:layout_width="match_parent"
+    android:id="@+id/bottombar"
+    android:layout_alignParentBottom="true"
+    android:layout_height="wrap_content">
 
+</com.middlecurved.custombottomnavigationbar.MiddleCurvedBottomNavigationBar>
 
-</LinearLayout>
+</RelativeLayout>
