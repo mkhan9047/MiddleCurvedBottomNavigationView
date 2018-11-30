@@ -7,16 +7,20 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +31,12 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
     private Path mPath;
     private Paint mPaint;
 
+    Canvas temp;
+
+    private SetMenuItemSelectedListener mSelectedListener;
+
+    private int iconSize = 25;
+    private int color = R.color.color_white;
     /**
      * the CURVE_CIRCLE_RADIUS represent the radius of the fab button
      */
@@ -81,13 +91,13 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
     }
 
 
-    public void setBottomBarBgColor(int color){
-        this.setBackgroundColor(color);
+    public void setIconSize(int iconSize) {
+        this.iconSize = iconSize;
+
+        removeShiftMode(this);
     }
 
     public void setMenuIcons(int first, int second, int third, int fourth) {
-
-
         getMenu().getItem(0).setIcon(first);
         getMenu().getItem(1).setIcon(second);
         getMenu().getItem(2).setIcon(second);
@@ -96,6 +106,37 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
 
     }
 
+    public void setBarColor(int color) {
+        this.color = color;
+        init();
+        if(temp != null){
+            temp.drawPath(mPath, mPaint);
+        }
+
+        super.onDraw(temp);
+
+    }
+
+    public void setNewMenuItemSelectedListener(
+            @Nullable SetMenuItemSelectedListener listener) {
+        mSelectedListener = listener;
+    }
+
+
+
+    public interface SetMenuItemSelectedListener {
+        /**
+         * Called when an item in the bottom navigation menu is selected.
+         *
+         * @param item The selected item
+         *
+         * @return true to display the item as the selected item and false if the item should not
+         *         be selected. Consider setting non-selectable items as disabled preemptively to
+         *         make them appear non-interactive.
+         */
+        boolean onMenuItemSelected(@NonNull MenuItem item);
+
+    }
 
     private void removeShiftMode(BottomNavigationView view) {
 
@@ -127,6 +168,18 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
                 LayoutParams params = (LayoutParams) icon.getLayoutParams();
                 params.gravity = Gravity.CENTER;
                 item.setShiftingMode(true);
+
+
+                /*make icon little big*/
+
+                final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
+                final ViewGroup.LayoutParams layoutParams = iconView.getLayoutParams();
+                final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                // set your height here
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, iconSize, displayMetrics);
+                // set your width here
+                layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, iconSize, displayMetrics);
+                iconView.setLayoutParams(layoutParams);
             }
         } catch (NoSuchFieldException e) {
             Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
@@ -146,7 +199,7 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
         mPath = new Path();
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaint.setColor(Color.WHITE);
+        mPaint.setColor(getResources().getColor(color));
         setBackgroundColor(Color.TRANSPARENT);
     }
 
@@ -200,6 +253,7 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        temp = canvas;
         super.onDraw(canvas);
         canvas.drawPath(mPath, mPaint);
     }
