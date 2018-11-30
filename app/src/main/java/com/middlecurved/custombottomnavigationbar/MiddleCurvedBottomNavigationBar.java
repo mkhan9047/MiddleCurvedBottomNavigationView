@@ -18,10 +18,14 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -169,6 +173,11 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
                 params.gravity = Gravity.CENTER;
                 item.setShiftingMode(true);
 
+//                /*add badge to item views*/
+
+
+
+
 
                 /*make icon little big*/
 
@@ -180,6 +189,18 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
                 // set your width here
                 layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, iconSize, displayMetrics);
                 iconView.setLayoutParams(layoutParams);
+
+
+                if(i == 3 || i == 4){
+
+                  /*  View badge = LayoutInflater.from(getContext())
+                            .inflate(R.layout.badge_layout, menuView, false);*/
+                  View badge = makeBadgeView();
+                    FrameLayout.LayoutParams f = new FrameLayout.LayoutParams(badge.getLayoutParams());
+                    f.topMargin = 7;
+                    badge.setLayoutParams(f);
+                    item.addView(badge);
+                }
             }
         } catch (NoSuchFieldException e) {
             Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
@@ -188,12 +209,37 @@ public class MiddleCurvedBottomNavigationBar extends BottomNavigationView {
         }
     }
 
+    private View makeBadgeView(){
+        FrameLayout frameLayout = new FrameLayout(getContext());
+        frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+
+        TextView textView = new TextView(getContext());
+       // frameLayout.addView(textView);
+        textView.setBackground(getResources().getDrawable(R.drawable.notification_badge));
+
+
+        textView.setLayoutParams(new TableLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT));
+
+
+        textView.setGravity(Gravity.CENTER);
+        textView.setPadding(3,3,3,3);
+        textView.setText("+9");
+        textView.setTextColor(getResources().getColor(R.color.white));
+        frameLayout.addView(textView);
+
+        return frameLayout;
+    }
+
 
     private void setCubicCircleRadius(Context context) {
 
         CURVE_CIRCLE_RADIUS = (60 * context.getResources().getDisplayMetrics().densityDpi) / 320;
 
     }
+
 
     private void init() {
         mPath = new Path();

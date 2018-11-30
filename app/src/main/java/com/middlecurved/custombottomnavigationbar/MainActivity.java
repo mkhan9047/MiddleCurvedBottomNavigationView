@@ -25,19 +25,26 @@ public class MainActivity extends AppCompatActivity {
 
         curvedBottomNavigationBar.setBarColor(R.color.colorPrimaryDark);
 
-        curvedBottomNavigationBar.setNewMenuItemSelectedListener(new MiddleCurvedBottomNavigationBar.SetMenuItemSelectedListener() {
+        
+        curvedBottomNavigationBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem item) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                
                 switch (item.getItemId()){
-
                     case R.id.first:
-                        Toast.makeText(MainActivity.this, "first one clicked!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "First clicked", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.second:
-                        Toast.makeText(MainActivity.this, "first one clicked!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Second clicked", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.third:
+                        Toast.makeText(MainActivity.this, "third clicked", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.fourth:
+                        Toast.makeText(MainActivity.this, "Fourth clicked", Toast.LENGTH_SHORT).show();
                         break;
                 }
-
+                
                 return true;
             }
         });
